@@ -1,7 +1,5 @@
 package com.tcd.model;
 
-import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,22 +7,16 @@ import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Usuario {
 	
 	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(
-		name = "UUID",
-		strategy = "org.hibernate.id.UUIDGenerator"
-	)
+	@GeneratedValue
 	@Column(name = "id", updatable = false, nullable = false)
-	private UUID id;
-	
+	private int id;
+
 	@Column(nullable = false, length = 50)
 	@NotBlank
 	private String nome;
@@ -47,7 +39,7 @@ public class Usuario {
 	}
 	
 	public Usuario(
-			@JsonProperty("id") UUID id, 
+			@JsonProperty("id") int id, 
 			@JsonProperty("nome") String nome, 
 			@JsonProperty("login") String login, 
 			@JsonProperty("email") String email, 
@@ -72,12 +64,32 @@ public class Usuario {
 		return senha;
 	}
 
-	public UUID getId() {
+	public int getId() {
 		return id;
 	}
 
 	public String getNome() {
 		return nome;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 }
