@@ -21,10 +21,10 @@ public class UsuarioService {
 		return usuarioRepository.findAll();
 	}
 	
-	public Usuario getUsuarioById(int id){
+	public Usuario getUsuarioById(Long id){
 		var usuario = usuarioRepository.findById(id);
 		
-		if (!usuario.isEmpty()) {
+		if (usuario.isPresent()) {
 			var usuarioGet = usuario.get();
 			return usuarioGet;
 		} else {
@@ -36,10 +36,10 @@ public class UsuarioService {
 		return usuarioRepository.save(usuario);
 	}
 	
-	public void deleteUsuario(int id){
+	public void deleteUsuario(Long id){
 		var usuario = usuarioRepository.findById(id);
 		
-		if (!usuario.isEmpty()) {
+		if (usuario.isPresent()) {
 			var usuarioGet = usuario.get();
 			usuarioRepository.deleteById(usuarioGet.getId());
 		} else {
@@ -47,10 +47,10 @@ public class UsuarioService {
 		}
 	}
 	
-	public Usuario updateUsuario(int id, Usuario usuario) {
+	public Usuario updateUsuario(Long id, Usuario usuario) {
 		Optional<Usuario> usuarioToUpdate = usuarioRepository.findById(id);
 		
-		if (!usuarioToUpdate.isEmpty()) {
+		if (usuarioToUpdate.isPresent()) {
 			Usuario usuarioUpdate = usuarioToUpdate.get();
 			usuarioUpdate.setEmail(usuario.getEmail());
 			usuarioUpdate.setLogin(usuario.getLogin());

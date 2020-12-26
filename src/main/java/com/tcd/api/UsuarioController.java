@@ -32,7 +32,7 @@ public class UsuarioController {
 	}
 	
 	@GetMapping(path = "{id}")
-	public Usuario getUsuarioById(@PathVariable("id") int id){
+	public Usuario getUsuarioById(@PathVariable("id") Long id){
 		return usuarioService.getUsuarioById(id);
 	}
 	
@@ -44,13 +44,13 @@ public class UsuarioController {
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping(path = "{id}")
-	public void deleteUsuarioById(@PathVariable("id") int id){
+	public void deleteUsuarioById(@PathVariable("id") Long id){
 		usuarioService.deleteUsuario(id);
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PutMapping(path = "{id}")
-	public void updateUsuarioById(@PathVariable("id") int id, @RequestBody Usuario usuario) {
+	public void updateUsuarioById(@PathVariable("id") Long id, @RequestBody Usuario usuario) {
 		usuarioService.updateUsuario(id, usuario);
 	}
 }

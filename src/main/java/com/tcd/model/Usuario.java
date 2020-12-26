@@ -3,6 +3,7 @@ package com.tcd.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -13,9 +14,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Usuario {
 	
 	@Id
-	@GeneratedValue
-	@Column(name = "id", updatable = false, nullable = false)
-	private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id", nullable = false, unique = true)
+	private Long id;
 
 	@Column(nullable = false, length = 50)
 	@NotBlank
@@ -39,7 +40,7 @@ public class Usuario {
 	}
 	
 	public Usuario(
-			@JsonProperty("id") int id, 
+			@JsonProperty("id") Long id, 
 			@JsonProperty("nome") String nome, 
 			@JsonProperty("login") String login, 
 			@JsonProperty("email") String email, 
@@ -64,7 +65,7 @@ public class Usuario {
 		return senha;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -72,7 +73,7 @@ public class Usuario {
 		return nome;
 	}
 	
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
