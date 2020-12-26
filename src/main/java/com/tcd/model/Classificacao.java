@@ -34,6 +34,4 @@ public class Classificacao {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	
-	
 }

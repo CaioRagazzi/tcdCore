@@ -21,4 +21,28 @@ public class GeneroConteudo {
 	@NotBlank
 	@ManyToOne
 	private Genero genero;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Conteudo getConteudo() {
+		return conteudo;
+	}
+
+	public void setConteudo(Conteudo conteudo) {
+		this.conteudo = conteudo;
+	}
+
+	public Genero getGenero() {
+		return genero;
+	}
+
+	public void setGenero(Genero genero) {
+		this.genero = genero;
+	}
 }
