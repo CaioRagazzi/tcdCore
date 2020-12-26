@@ -5,7 +5,9 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -13,9 +15,9 @@ import javax.validation.constraints.NotBlank;
 public class Conteudo {
 	
 	@Id
-	@GeneratedValue
-	@Column(name = "id", updatable = false, nullable = false)
-	private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id", nullable = false, unique = true)
+	private Long id;
 	
 	@Column(nullable = false, length = 50)
 	@NotBlank
@@ -30,10 +32,10 @@ public class Conteudo {
 	@Email
 	private Date dataLancamento;
 	
-	@Column(nullable = false)
 	@NotBlank
-	private int idTipoConteudo;
-	
+	@ManyToOne
+	private TipoConteudo tipoConteudo;
+
 	@Column(nullable = false)
 	@NotBlank
 	private int quantidadeVisualizacao;
@@ -42,11 +44,11 @@ public class Conteudo {
 		super();
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -73,13 +75,13 @@ public class Conteudo {
 	public void setDataLancamento(Date dataLancamento) {
 		this.dataLancamento = dataLancamento;
 	}
-
-	public int getIdTipoConteudo() {
-		return idTipoConteudo;
+	
+	public TipoConteudo getIdTipoConteudo() {
+		return tipoConteudo;
 	}
 
-	public void setIdTipoConteudo(int idTipoConteudo) {
-		this.idTipoConteudo = idTipoConteudo;
+	public void setIdTipoConteudo(TipoConteudo idTipoConteudo) {
+		this.tipoConteudo = idTipoConteudo;
 	}
 
 	public int getQuantidadeVisualizacao() {
