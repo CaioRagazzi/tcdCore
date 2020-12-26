@@ -35,6 +35,10 @@ public class Conteudo {
 	@NotBlank
 	@ManyToOne
 	private TipoConteudo tipoConteudo;
+	
+	@NotBlank
+	@ManyToOne
+	private Classificacao classificacao;
 
 	@Column(nullable = false)
 	@NotBlank
