@@ -38,7 +38,7 @@ public class ClassificacaoController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Classificacao createClassificacao(@RequestBody @Valid Classificacao classificacao){
+	public Classificacao createClassificacao(@RequestBody @Valid Classificacao classificacao) throws InterruptedException{
 		return classificacaoService.addClassificacao(classificacao);
 	}
 	

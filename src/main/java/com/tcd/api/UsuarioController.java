@@ -3,6 +3,7 @@ package com.tcd.api;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +22,7 @@ import com.tcd.service.UsuarioService;
 @RequestMapping("api/v1/usuario")
 @RestController
 @ComponentScan("com.tcd.service")
+@EnableCircuitBreaker
 public class UsuarioController {
 
 	@Autowired()
