@@ -33,5 +33,22 @@ public class ConteudoCurtidoService {
 			throw new ConteudoCurtidoNotFoundException();
 		}
 	}
+	
+	public void deleteConteudoCurtidoById(Long id) {
+		var possibleConteudoCurtido = conteudoCurtidoRepository.findById(id);
+		
+		if (possibleConteudoCurtido.isPresent()) {
+			var conteudoCurtido = possibleConteudoCurtido.get();
+			conteudoCurtidoRepository.deleteById(conteudoCurtido.getId());
+		} else {
+			throw new ConteudoCurtidoNotFoundException();
+		}
+	}
+	
+	public ConteudoCurtido addConteudoCurtido(ConteudoCurtido conteudoCurtidoParam) {
+		var createdConteudoCurtido = conteudoCurtidoRepository.save(conteudoCurtidoParam);
+		
+		return createdConteudoCurtido;
+	}
 
 }
