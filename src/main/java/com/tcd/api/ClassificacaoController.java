@@ -3,8 +3,6 @@ package com.tcd.api;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tcd.model.Classificacao;
 import com.tcd.service.ClassificacaoService;
 
-@RefreshScope
 @RequestMapping("api/v1/classificacao")
 @RestController
 @ComponentScan("com.tcd.service")
@@ -29,12 +26,8 @@ public class ClassificacaoController {
 	@Autowired()
 	private ClassificacaoService classificacaoService;
 	
-	@Value("${message:default}")
-	private String message;
-	
 	@GetMapping
 	public Iterable<Classificacao> getAllClassificacao(){
-		System.out.println(message);
 		return classificacaoService.getAllClassificacao();
 	}
 	
