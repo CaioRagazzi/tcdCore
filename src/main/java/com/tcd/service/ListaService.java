@@ -1,13 +1,16 @@
 package com.tcd.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.tcd.configuration.Producer;
 import com.tcd.model.Lista;
 import com.tcd.model.ListaCreateDTO;
 import com.tcd.model.ListaRemoveDTO;
@@ -17,6 +20,8 @@ public class ListaService {
 	
 	private final RestTemplate restTemplate;
 	private final String url = "http://localhost:8082/v1/lista";
+	@Autowired
+	private Producer producer;
 
     public ListaService() {
     	this.restTemplate = new RestTemplateBuilder().build();
@@ -54,5 +59,13 @@ public class ListaService {
 		var response = restTemplate.exchange(url, HttpMethod.DELETE, request, String.class);
 		
 		return response.toString();
+	}
+	
+	public void sendAddMessage(String message) {
+		this.producer.sendAddMessage(message);
+	}
+	
+	public void sendRemovedMessage(String message) {
+		this.producer.sendRemoveMessage(message);
 	}
 }

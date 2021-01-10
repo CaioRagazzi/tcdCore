@@ -3,6 +3,7 @@ package com.tcd.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,11 +11,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.tcd.model.Lista;
 import com.tcd.model.ListaCreateDTO;
 import com.tcd.model.ListaRemoveDTO;
+import com.tcd.model.Usuario;
 import com.tcd.service.ListaService;
 
 @RequestMapping("api/v1/lista")
@@ -52,6 +58,34 @@ public class ListController {
 		var response = listaService.removeConteudo(listaRemoveDTO);
 		
 		return response;
+	}
+	
+	@PostMapping(path = "addkafka")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void addKafka(@RequestBody ListaCreateDTO listaTeste){
+		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json;
+		try {
+			json = objectWriter.writeValueAsString(listaTeste);
+			listaService.sendAddMessage(json);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(path = "removekafka", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.CREATED)
+	public void removeKafka(@RequestBody ListaRemoveDTO listaTeste){
+		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json;
+		try {
+			json = objectWriter.writeValueAsString(listaTeste);
+			listaService.sendRemovedMessage(json);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
