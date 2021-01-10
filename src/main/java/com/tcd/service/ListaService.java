@@ -6,12 +6,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.tcd.model.Lista;
 import com.tcd.model.ListaCreateDTO;
+import com.tcd.model.ListaRemoveDTO;
 
 @Service
 public class ListaService {
@@ -39,30 +38,18 @@ public class ListaService {
 	
 	public String addConteudo(ListaCreateDTO listaCreateDTO) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.setContentType(MediaType.APPLICATION_JSON);
 		
-		MultiValueMap<String, Integer> map = new LinkedMultiValueMap<String, Integer>();
-		map.add("userId", listaCreateDTO.getUserId());
-		map.add("tipoLista", listaCreateDTO.getTipoLista());
-		map.add("idConteudo", listaCreateDTO.getIdConteudo());
-		
-		HttpEntity<MultiValueMap<String, Integer>> request = new HttpEntity<MultiValueMap<String, Integer>>(map, headers);
-		
-		var response = restTemplate.postForEntity(url, request, String.class);
+		var response = restTemplate.postForEntity(url, listaCreateDTO, String.class);
 		
 		return response.toString();
 	}
 	
-	public String removeConteudo(ListaCreateDTO listaCreateDTO) {
+	public String removeConteudo(ListaRemoveDTO listaRemoveDTO) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.setContentType(MediaType.APPLICATION_JSON);
 		
-		MultiValueMap<String, Integer> map = new LinkedMultiValueMap<String, Integer>();
-		map.add("userId", listaCreateDTO.getUserId());
-		map.add("tipoLista", listaCreateDTO.getTipoLista());
-		map.add("idConteudo", listaCreateDTO.getIdConteudo());
-		
-		HttpEntity<MultiValueMap<String, Integer>> request = new HttpEntity<MultiValueMap<String, Integer>>(map, headers);
+		HttpEntity<ListaRemoveDTO> request = new HttpEntity<ListaRemoveDTO>(listaRemoveDTO, headers);
 		
 		var response = restTemplate.exchange(url, HttpMethod.DELETE, request, String.class);
 		

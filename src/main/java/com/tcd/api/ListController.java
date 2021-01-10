@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tcd.model.Lista;
 import com.tcd.model.ListaCreateDTO;
+import com.tcd.model.ListaRemoveDTO;
 import com.tcd.service.ListaService;
 
 @RequestMapping("api/v1/lista")
@@ -47,8 +48,8 @@ public class ListController {
 	}
 	
 	@RequestMapping(value = "", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public String removeConteudo(ListaCreateDTO listaCreateDTO) {
-		var response = listaService.removeConteudo(listaCreateDTO);
+	public String removeConteudo(@RequestBody ListaRemoveDTO listaRemoveDTO) {
+		var response = listaService.removeConteudo(listaRemoveDTO);
 		
 		return response;
 	}
