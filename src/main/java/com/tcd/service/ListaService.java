@@ -6,7 +6,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -61,11 +60,11 @@ public class ListaService {
 		return response.toString();
 	}
 	
-	public void sendAddMessage(String message) {
+	public void sendAddMessageLista(String message) {
 		this.producer.sendAddMessage(message);
 	}
 	
-	public void sendRemovedMessage(String message) {
+	public void sendRemovedMessageLista(String message) {
 		this.producer.sendRemoveMessage(message);
 	}
 }

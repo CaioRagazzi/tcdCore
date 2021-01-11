@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tcd.model.GeneroConteudo;
 import com.tcd.service.GeneroConteudoService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RequestMapping("api/v1/generoconteudo")
 @RestController
 @ComponentScan("com.tcd.service")
@@ -27,22 +29,26 @@ public class GeneroConteudoController {
 	@Autowired()
 	private GeneroConteudoService generoConteudoService;
 	
+	@ApiOperation(value = "Lista todos os generos com conteudo")
 	@GetMapping
 	public Iterable<GeneroConteudo> getAllGeneroConteudo(){
 		return generoConteudoService.getAllGeneroConteudo();
 	}
 	
+	@ApiOperation(value = "Lista genero com conteudo por id")
 	@GetMapping(path = "{id}")
 	public GeneroConteudo getGeneroConteudoById(@PathVariable("id") Long id){
 		return generoConteudoService.getGeneroConteudoById(id);
 	}
 	
+	@ApiOperation(value = "Cria um novo genero com conteudo")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public GeneroConteudo createGeneroConteudo(@RequestBody @Valid GeneroConteudo generoConteudo){
 		return generoConteudoService.addGeneroConteudo(generoConteudo);
 	}
 	
+	@ApiOperation(value = "Delete genero com conteudo por id")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping(path = "{id}")
 	public void deleteGeneroConteudoById(@PathVariable("id") Long id){

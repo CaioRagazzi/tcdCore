@@ -12,6 +12,7 @@ public class Producer {
 	private static final Logger logger = LoggerFactory.getLogger(Producer.class);
     private static final String ADD_TOPIC = "listaAdd";
     private static final String REMOVE_TOPIC = "listaRemove";
+    private static final String BLACKLIST_TOPIC = "blackList";
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -24,5 +25,10 @@ public class Producer {
     public void sendRemoveMessage(String message) {
     	logger.info(String.format("#### -> Producing remove message -> %s", message));
         this.kafkaTemplate.send(REMOVE_TOPIC, message);
+    }
+    
+    public void sendToBlackList(String message) {
+    	logger.info(String.format("#### -> Producing to black list -> %s", message));
+        this.kafkaTemplate.send(BLACKLIST_TOPIC, message);
     }
 }

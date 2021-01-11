@@ -20,8 +20,9 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.tcd.model.Lista;
 import com.tcd.model.ListaCreateDTO;
 import com.tcd.model.ListaRemoveDTO;
-import com.tcd.model.Usuario;
 import com.tcd.service.ListaService;
+
+import io.swagger.annotations.ApiOperation;
 
 @RequestMapping("api/v1/lista")
 @RestController
@@ -32,6 +33,7 @@ public class ListController {
 	@Autowired
 	private ListaService listaService;
 	
+	@ApiOperation(value = "Lista lista por ID de usuário (método síncrono para o serviço de lista)")
 	@GetMapping(path = "{userId}")
 	public Lista[] getListaByUserId(@PathVariable("userId") long userId){
 		var response = listaService.GetByUserId(userId);
@@ -39,6 +41,7 @@ public class ListController {
 		return response;
 	}
 	
+	@ApiOperation(value = "Lista lista por ID de usuário e tipo de lista (método síncrono para o serviço de lista)")
 	@GetMapping(path = "user/{userId}/tipo/{tipoLista}")
 	public Lista getListaByTipo(@PathVariable("userId") long userId, @PathVariable("tipoLista") long tipoLista){
 		var response = listaService.GetByTipoId(userId, tipoLista);
@@ -46,42 +49,30 @@ public class ListController {
 		return response;
 	}
 	
-	@PostMapping
-	public String addConteudo(@RequestBody ListaCreateDTO listaCreateDTO) {
-		var response = listaService.addConteudo(listaCreateDTO);
-		
-		return response;
-	}
-	
-	@RequestMapping(value = "", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public String removeConteudo(@RequestBody ListaRemoveDTO listaRemoveDTO) {
-		var response = listaService.removeConteudo(listaRemoveDTO);
-		
-		return response;
-	}
-	
-	@PostMapping(path = "addkafka")
+	@ApiOperation(value = "Cria uma nova lista (método assíncrono para o serviço de lista)")
+	@PostMapping(path = "lista")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addKafka(@RequestBody ListaCreateDTO listaTeste){
+	public void addLista(@RequestBody ListaCreateDTO listaTeste){
 		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String json;
 		try {
 			json = objectWriter.writeValueAsString(listaTeste);
-			listaService.sendAddMessage(json);
+			listaService.sendAddMessageLista(json);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	@RequestMapping(path = "removekafka", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Delete uma lista (método assíncrono para o serviço de lista)")
+	@RequestMapping(path = "lista", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public void removeKafka(@RequestBody ListaRemoveDTO listaTeste){
+	public void removeLista(@RequestBody ListaRemoveDTO listaTeste){
 		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String json;
 		try {
 			json = objectWriter.writeValueAsString(listaTeste);
-			listaService.sendRemovedMessage(json);
+			listaService.sendRemovedMessageLista(json);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
