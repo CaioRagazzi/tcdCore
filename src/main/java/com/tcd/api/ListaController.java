@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @ComponentScan("com.tcd.service")
 @EnableCircuitBreaker
-public class ListController {
+public class ListaController {
 	
 	@Autowired
 	private ListaService listaService;
