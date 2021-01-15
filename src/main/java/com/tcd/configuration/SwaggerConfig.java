@@ -27,8 +27,8 @@ public class SwaggerConfig {
 	
 	private ApiInfo apiInfo() {
 	    return new ApiInfoBuilder()
-	            .title("Trabalho de conclusão de curso Spring Boot REST API")
-	            .description("Um exemplo de aplicação Spring Boot REST API utilizando os recursos informados no trabalho")
+	            .title("API Core")
+	            .description("Api para gerenciamento de filmes NetFlix")
 	            .version("1.0.0")
 	            .license("Apache License Version 2.0")
 	            .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
