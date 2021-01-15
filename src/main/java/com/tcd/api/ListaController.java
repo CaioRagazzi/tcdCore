@@ -33,7 +33,7 @@ public class ListaController {
 	@Autowired
 	private ListaService listaService;
 	
-	@ApiOperation(value = "Lista lista por ID de usuário (método síncrono para o serviço de lista)")
+	@ApiOperation(value = "Lista a lista por ID de usuário (método síncrono para o serviço de lista)")
 	@GetMapping(path = "{userId}")
 	public Lista[] getListaByUserId(@PathVariable("userId") long userId){
 		var response = listaService.GetByUserId(userId);
