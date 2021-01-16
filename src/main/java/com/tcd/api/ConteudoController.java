@@ -45,9 +45,10 @@ public class ConteudoController {
 		return conteudoService.getConteudoById(id);
 	}
 	
+	@ApiOperation(value = "Cria um novo conteúdo")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Conteudo createUsuario(@RequestBody @Valid Conteudo conteudo){
+	public Conteudo createConteudo(@RequestBody @Valid Conteudo conteudo){
 		return conteudoService.addConteudo(conteudo);
 	}
 	
