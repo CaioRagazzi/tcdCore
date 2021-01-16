@@ -6,6 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.tcd.configuration.Producer;
+import com.tcd.model.BlackList;
 import com.tcd.model.Conteudo;
 import com.tcd.repository.ConteudoRepository;
 import com.tcs.Exception.ConteudoNotFoundException;
@@ -17,11 +23,16 @@ public class ConteudoService {
 	@Autowired
 	private ConteudoRepository conteudoRepository;
 	
+	@Autowired
+	private Producer producer;
+	
+	@HystrixCommand(fallbackMethod = "GetAllErrorHandling")
 	public List<Conteudo> getAllConteudo() {
 		var allConteudo = conteudoRepository.findAll();
 		return allConteudo;
 	}
 	
+	@HystrixCommand(fallbackMethod = "GetConteudoByIdErrorHandling")
 	public Conteudo getConteudoById(Long id) {
 		var possibleConteudo = conteudoRepository.findById(id);
 		
@@ -34,6 +45,7 @@ public class ConteudoService {
 		}
 	}
 	
+	@HystrixCommand(fallbackMethod = "DeleteConteudoByIdErrorHandling")
 	public void deleteConteudoById(Long id) {
 		var possibleConteudo = conteudoRepository.findById(id);
 		
@@ -46,12 +58,14 @@ public class ConteudoService {
 		}
 	}
 	
+	@HystrixCommand(fallbackMethod = "AddConteudoErrorHandling")
 	public Conteudo addConteudo(Conteudo conteudo) {
 		var conteudoAdded = conteudoRepository.save(conteudo);
 		
 		return conteudoAdded;
 	}
 	
+	@HystrixCommand(fallbackMethod = "UpdateConteudoErrorHandling")
 	public Conteudo updateConteudo(Long id, Conteudo conteudo) {
 		var possibleConteudo = conteudoRepository.findById(id);
 		
@@ -70,6 +84,49 @@ public class ConteudoService {
 		} else {
 			throw new ConteudoNotFoundException();
 		}
+	}
+	
+	public List<Conteudo> GetAllErrorHandling() {
+		List<Conteudo>  conteudoList = null;
+		return conteudoList;
+	}
+	
+	public Conteudo GetConteudoByIdErrorHandling(Long id) {
+		return new Conteudo();
+	}
+	
+	public void DeleteConteudoByIdErrorHandling(Long id) {
+		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json;
+		try {
+			BlackList blackList = new BlackList();
+			blackList.setMethodName("DeleteConteudoByIdErrorHandling");
+			blackList.setJson(objectWriter.writeValueAsString(id));
+			json = objectWriter.writeValueAsString(blackList);
+			this.producer.sendToBlackList(json);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Conteudo AddConteudoErrorHandling(Conteudo conteudo) {
+		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json;
+		try {
+			BlackList blackList = new BlackList();
+			blackList.setMethodName("AddConteudoErrorHandling");
+			blackList.setJson(objectWriter.writeValueAsString(conteudo));
+			json = objectWriter.writeValueAsString(blackList);
+			this.producer.sendToBlackList(json);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+		return new Conteudo();
+	}
+	
+	public Conteudo UpdateConteudoErrorHandling(Long id, Conteudo conteudo) {
+		return new Conteudo();
 	}
 
 }

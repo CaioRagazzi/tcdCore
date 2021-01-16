@@ -9,7 +9,12 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.tcd.configuration.Producer;
+import com.tcd.model.BlackList;
 import com.tcd.model.Lista;
 import com.tcd.model.ListaCreateDTO;
 import com.tcd.model.ListaRemoveDTO;
@@ -26,21 +31,24 @@ public class ListaService {
     	this.restTemplate = new RestTemplateBuilder().build();
     }
 	
-	public Lista[] GetByUserId(long userId) {		
+    @HystrixCommand(fallbackMethod = "GetListaByIdErrorHandling")
+	public Lista[] GetListaById(long userId) {		
 		String urlWithUser = url + "/{userId}";
 		var response = restTemplate.getForObject(urlWithUser, Lista[].class, userId);
 		
 		return response;
 	}
 	
-	public Lista GetByTipoId(long userId, long tipoId) {		
+    @HystrixCommand(fallbackMethod = "GetListaByTipoIdIdErrorHandling")
+	public Lista GetListaByTipoId(long userId, long tipoId) {		
 		String urlWithUser = url + "/{userId}/{tipoId}";
 		var response = restTemplate.getForObject(urlWithUser, Lista.class, userId, tipoId);
 		
 		return response;
 	}
 	
-	public String addConteudo(ListaCreateDTO listaCreateDTO) {
+    @HystrixCommand(fallbackMethod = "AddListaErrorHandling")
+	public String addLista(ListaCreateDTO listaCreateDTO) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
@@ -49,7 +57,8 @@ public class ListaService {
 		return response.toString();
 	}
 	
-	public String removeConteudo(ListaRemoveDTO listaRemoveDTO) {
+    @HystrixCommand(fallbackMethod = "RemoveListaErrorHandling")
+	public String removeLista(ListaRemoveDTO listaRemoveDTO) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
@@ -60,11 +69,82 @@ public class ListaService {
 		return response.toString();
 	}
 	
+    @HystrixCommand(fallbackMethod = "SendAddMessageListaErrorHandling")
 	public void sendAddMessageLista(String message) {
 		this.producer.sendAddMessage(message);
 	}
 	
+    @HystrixCommand(fallbackMethod = "SendRemovedMessageListaErrorHandling")
 	public void sendRemovedMessageLista(String message) {
 		this.producer.sendRemoveMessage(message);
+	}
+	
+	public Lista[] GetListaByIdErrorHandling(long userId) {
+		Lista[] litLista = null;
+		return litLista;
+	}
+	
+	public Lista GetListaByTipoIdIdErrorHandling(long userId, long tipoId) {		
+		return new Lista();
+	}
+	
+	public String AddListaErrorHandling(ListaCreateDTO listaCreateDTO) {
+		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json;
+		try {
+			BlackList blackList = new BlackList();
+			blackList.setMethodName("AddListaErrorHandling");
+			blackList.setJson(objectWriter.writeValueAsString(listaCreateDTO));
+			json = objectWriter.writeValueAsString(blackList);
+			this.producer.sendToBlackList(json);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+		return new String();
+	}
+	
+	public String RemoveListaErrorHandling(ListaRemoveDTO listaRemoveDTO) {
+		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json;
+		try {
+			BlackList blackList = new BlackList();
+			blackList.setMethodName("RemoveListaHandling");
+			blackList.setJson(objectWriter.writeValueAsString(listaRemoveDTO));
+			json = objectWriter.writeValueAsString(blackList);
+			this.producer.sendToBlackList(json);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+		return "";
+	}
+	
+	public void SendAddMessageListaErrorHandling(String message) {
+		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json;
+		try {
+			BlackList blackList = new BlackList();
+			blackList.setMethodName("SendAddMessageListaErrorHandling");
+			blackList.setJson(objectWriter.writeValueAsString(message));
+			json = objectWriter.writeValueAsString(blackList);
+			this.producer.sendToBlackList(json);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void SendRemovedMessageListaErrorHandling(String message) {
+		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json;
+		try {
+			BlackList blackList = new BlackList();
+			blackList.setMethodName("SendRemovedMessageListaErrorHandling");
+			blackList.setJson(objectWriter.writeValueAsString(message));
+			json = objectWriter.writeValueAsString(blackList);
+			this.producer.sendToBlackList(json);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 	}
 }

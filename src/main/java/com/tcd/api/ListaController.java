@@ -36,7 +36,7 @@ public class ListaController {
 	@ApiOperation(value = "Lista a lista por ID de usuário (método síncrono para o serviço de lista)")
 	@GetMapping(path = "{userId}")
 	public Lista[] getListaByUserId(@PathVariable("userId") long userId){
-		var response = listaService.GetByUserId(userId);
+		var response = listaService.GetListaById(userId);
 		
 		return response;
 	}
@@ -44,7 +44,7 @@ public class ListaController {
 	@ApiOperation(value = "Lista lista por ID de usuário e tipo de lista (método síncrono para o serviço de lista)")
 	@GetMapping(path = "user/{userId}/tipo/{tipoLista}")
 	public Lista getListaByTipo(@PathVariable("userId") long userId, @PathVariable("tipoLista") long tipoLista){
-		var response = listaService.GetByTipoId(userId, tipoLista);
+		var response = listaService.GetListaByTipoId(userId, tipoLista);
 		
 		return response;
 	}
